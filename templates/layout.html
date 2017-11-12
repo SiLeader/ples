@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+    <title>{{ title }} - Ples</title>
+    {% else %}
+    <title>Ples</title>
+    {% endif %}
+
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/footer.css" />
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    {% block scripts %}
+    {% endblock %}
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                {% if title_link %}
+                <a class="navbar-brand" href="{{ title_link }}">Ples</a>
+                {% else %}
+                <a class="navbar-brand" href="/">Ples</a>
+                {% endif %}
+            </div>
+            <div id="navbar-header-content" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    {% for l in links %}
+                    <li><a href="{{ l.link }}">{{ l.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 64px">
+        <div class="row">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">
+                <label style="float: left">Ples</label>
+                <label style="float: right">&copy; 2017 SiLeader.</label>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
