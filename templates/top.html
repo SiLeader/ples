@@ -1,19 +1,24 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="panel panel-info">
-    <div class="panel-heading">サインイン</div>
-    <div class="panel-body">
-        <form method="post" action="/auth">
-            <label for="id">ユーザーID</label>
-            <input id="id" class="form-control" type="text" name="id">
+    <div class="col-sm-12 col-md-6">
 
-            <label for="password">パスワード</label>
-            <input id="password" class="form-control" type="password" name="password">
-
-            <button type="submit" class="btn btn-info">サインイン</button>
-        </form>
-        <label>{{ sign_in_comment }}</label>
     </div>
-</div>
+    <div class="col-sm-12 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">サインイン</div>
+            <div class="panel-body">
+                <form method="post" action="/auth">
+                    <label for="id">ユーザーID</label>
+                    <input id="id" class="form-control" type="text" name="id">
+
+                    <label for="password">パスワード</label>
+                    <input id="password" class="form-control" type="password" name="password">
+
+                    <button type="submit" class="btn btn-info">サインイン</button>
+                </form>
+                <label>{{ sign_in_comment }}</label>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="col-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">必須課題</div>
+            <div class="panel-body">
+                <form method="post" action="/question">
+                    <select class="form-control" name="question_id">
+                        {% if require_questions|length >0 %}
+                            {% for q in require_questions %}
+                        <option value="{{ q.id }}">{{ q.title }}</option>
+                            {% endfor %}
+                        {% else %}
+                        <option>課題はありません</option>
+                        {% endif %}
+                    </select>
+
+                    {% if require_questions|length >0 %}
+                    <button class="btn btn-primary" type="submit">OK</button>
+                    {% endif %}
+                </form>
+                <label>{{ sign_in_comment }}</label>
+            </div>
+        </div>
+    </div>
+{% endblock %}

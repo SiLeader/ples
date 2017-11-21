@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js"></script>
+    <script type="application/javascript">
+        $(document).on('change', ':file', function() {
+            var input=$(this);
+            var files=input.prop("files");
+            var filesName=[];
+            for(var i=0; i<files.length; ++i) {
+                filesName.push(files.item(i).name);
+            }
+            input.parent().parent().next(':text').val(filesName.join(", "));
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="col-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">問題</div>
+            <div class="panel-body">
+                {{ q.sentence }}
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">例</div>
+            <div class="panel-body">
+                {{ q.test }}
+                <hr width="100%"/>
+                {{ q.result }}
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">ファイルから提出</div>
+            <div class="panel-body">
+                <form method="post" action="/submit/files">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                ファイルを選択<input type="file" multiple="multiple" style="display: none;">
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly="">
+                    </div>
+                    <button type="submit" class="btn btn-primary">提出</button>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">書いて提出</div>
+            <div class="panel-body">
+                <div id="editor" style="height: 600px; width: 100%"></div>
+                <a id="onSubmit" class="btn btn-primary" onclick="onSubmissionWithSourceClick();">提出</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block post_scripts %}
+    <script type="application/javascript">
+        var editor=ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.setFontSize(14);
+        editor.getSession().setMode("ace/mode/{{ q.language }}");
+        editor.getSession().setUseWrapMode(true);
+        editor.getSession().setTabSize(4);
+        editor.$blockScrolling=Infinity;
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true
+        });
+    </script>
+    <script type="application/javascript">
+        function onSubmissionWithSourceClick() {
+            var submit=$("#onSubmit");
+            submit.enabled(false);
+            var source=editor.getValue();
+            $.post(
+                location.hostname+"/submit/json",
+                {
+                    "data": source
+                }
+            ).done(function (res) {
+                submit.enabled(true);
+                if(res.result) {
+                    // OK
+                }else{
+                    var message=res.message;
+                    // Error
+                    // Error message
+                }
+            }).fail(function (res) {
+                submit.enabled(true);
+            });
+        }
+    </script>
+{% endblock %}
