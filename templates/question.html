@@ -26,9 +26,12 @@
         <div class="panel panel-primary">
             <div class="panel-heading">例</div>
             <div class="panel-body">
-                {{ q.test }}
-                <hr width="100%"/>
-                {{ q.result }}
+                {% set test = q.test[0] %}
+                コマンドライン引数: {{ test.args|join(',') }}
+                <hr width="100%" color="#808080" />
+                標準入力: {{ test.stdin }}
+                <hr width="100%" color="#808080"/>
+                標準出力: {{ test.result.stdout }}
             </div>
         </div>
         <div class="panel panel-primary">
@@ -71,19 +74,21 @@
             enableSnippets: true,
             enableLiveAutocompletion: true
         });
-    </script>
-    <script type="application/javascript">
+
         function onSubmissionWithSourceClick() {
             var submit=$("#onSubmit");
-            submit.enabled(false);
+            submit.prop("disabled", true);
             var source=editor.getValue();
-            $.post(
-                location.hostname+"/submit/json",
-                {
-                    "data": source
+            $.ajax({
+                "url": "{{ url_for('submit_json') }}",
+                "type": "POST",
+                //"dataType": "json",
+                "data": {
+                    "data": source,
+                    "id": {{ q.id }}
                 }
-            ).done(function (res) {
-                submit.enabled(true);
+            }).done(function (res) {
+                submit.prop("disabled", false);
                 if(res.result) {
                     // OK
                 }else{
@@ -92,7 +97,7 @@
                     // Error message
                 }
             }).fail(function (res) {
-                submit.enabled(true);
+                submit.prop("disabled", false);
             });
         }
     </script>

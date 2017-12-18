@@ -1,0 +1,45 @@
+[
+  {
+    "id": "0",
+    "title": "printfで画面出力",
+    "category": "基本",
+    "sentence": "printfを用いて標準出力をします。数値が標準入力から与えられるのでそれをそのまま標準出力に出力します。",
+    "tests": [
+      {
+        "stdin": "123",
+        "args": [],
+        "result": {
+          "stdout": "123",
+          "file": {
+            "name": "",
+            "content": ""
+          }
+        }
+      },
+      {
+        "stdin": "12345",
+        "args": [],
+        "result": {
+          "stdout": "123",
+          "file": {
+            "name": "",
+            "content": ""
+          }
+        }
+      },
+      {
+        "stdin": "100000",
+        "args": [],
+        "result": {
+          "stdout": "123",
+          "file": {
+            "name": "",
+            "content": ""
+          }
+        }
+      }
+    ],
+    "exec": "c",
+    "language": "c_cpp"
+  }
+]

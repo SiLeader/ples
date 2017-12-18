@@ -6,6 +6,7 @@ Programming Language Exercise System
 from flask import Flask, render_template, redirect, request, session
 import util
 from model import users
+from model import questions
 import auth
 
 app = Flask(__name__)
@@ -19,12 +20,29 @@ def hello_world():
 
 @app.route('/user_top')
 def user_top():
-    return render_template('user_top.html')
+    qs = questions.get_list()
+    return render_template('user_top.html', require_questions=qs)
 
 
-@app.route('/question')
+@app.route('/question', methods=['POST', 'GET'])
 def question():
-    return render_template('question.html', q={"sentence": "qqq", "test": "ppp", "result": "ooo", "language": "c_cpp"})
+    if request.method == 'POST':
+        return redirect('/question?id=' + request.form["question_id"])
+    else:
+        q = request.args.get("id", default=None, type=str)
+        if q is None:
+            return redirect('/user_top')
+        q = questions.get(q)
+        return render_template('question.html', q=q)
+
+
+@app.route('/submit/json', methods=["POST"])
+def submit_json():
+    data = request.form["data"]
+    qid = request.form["id"]
+    if questions.check_to_create_temporary_file(qid, data):
+        return {"result": True}
+    return {"result": False}
 
 
 @app.route('/auth', methods=['POST'])

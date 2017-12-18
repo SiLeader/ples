@@ -3,6 +3,8 @@
 
 import pymongo
 import json
+from . import execute
+import uuid
 
 
 _client = pymongo.MongoClient('localhost')
@@ -16,12 +18,11 @@ _CATEGORY = 'category'
 _TITLE = 'title'
 _SENTENCE = 'sentence'
 _TEST_DATA = 'test'
-_EXEC_RESULTS = 'result'
 _EXEC_SYSTEM = 'exec'
 
 
 def add(qid: str, _title: str, category: str,
-        lang: str, sentence: str, test_data: [str], result: [str], exec_system: str):
+        lang: str, sentence: str, test_data: [str], exec_system: str):
     """
     add questions
     :param qid: question id (unique)
@@ -30,7 +31,6 @@ def add(qid: str, _title: str, category: str,
     :param lang: programming language
     :param sentence: problem sentence
     :param test_data: validation check test data
-    :param result: results of test data
     :param exec_system: execution command id (see execute.py)
     :return: status
     """
@@ -41,7 +41,6 @@ def add(qid: str, _title: str, category: str,
         _LANGUAGE: lang,
         _SENTENCE: sentence,
         _TEST_DATA: test_data,
-        _EXEC_RESULTS: result,
         _EXEC_SYSTEM: exec_system
     })
     return True
@@ -63,7 +62,18 @@ def get(qid):
 
 
 def get_list():
-    return _col.find()
+    return list(_col.find())
+
+
+def check_to_create_temporary_file(qid: str, data: [str]) -> bool:
+    q = get(qid)
+    cid = q[_EXEC_SYSTEM]
+    output = "/tmp/" + uuid.uuid4().hex
+    for test in q[_TEST_DATA]:
+        result = execute.run_to_create_temporary_file(cid, data, output, test["args"], test["stdin"])
+        if result is None or result.returncode != 0:
+            return False
+    return True
 
 
 def remove(qid: str):
@@ -79,13 +89,13 @@ if __name__ == '__main__':
 
     with open(json_file, encoding='utf-8') as json_:
         json_data = json.load(json_)
-        add(
-            json_data['id'],
-            json_data['title'],
-            json_data['category'],
-            json_data['language'],
-            json_data['sentence'],
-            json_data['tests'],
-            json_data['results'],
-            json_data['exec']
-        )
+        for json in json_data:
+            add(
+                json['id'],
+                json['title'],
+                json['category'],
+                json['language'],
+                json['sentence'],
+                json['tests'],
+                json['exec']
+            )

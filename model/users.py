@@ -3,6 +3,7 @@
 
 import pymongo
 import util
+import json
 
 
 _client = pymongo.MongoClient('localhost')
@@ -120,3 +121,12 @@ def get_result(uid: str, qid: str):
     user = _col.find_one({_USER_ID: uid})
     res = user[_QUESTION_RESULTS]
     return res[qid]
+
+
+if __name__ == '__main__':
+    json_file = input('JSON file path >>> ')
+
+    with open(json_file, encoding='utf-8') as json_:
+        json_data = json.load(json_)
+        for json in json_data:
+            add(json['id'], json["password"], json["name"])

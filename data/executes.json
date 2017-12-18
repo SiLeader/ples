@@ -1,0 +1,16 @@
+[
+  {
+    "id": "c",
+    "command": [
+      "clang -std=c11 -o $@ $^",
+      "$@ $#"
+    ]
+  },
+  {
+    "id": "cpp",
+    "command": [
+      "clang++ -std=c11 -o $@ $^",
+      "$@ $#"
+    ]
+  }
+]
