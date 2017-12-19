@@ -54,7 +54,11 @@
             <div class="panel-heading">書いて提出</div>
             <div class="panel-body">
                 <div id="editor" style="height: 600px; width: 100%"></div>
-                <a id="onSubmit" class="btn btn-primary" onclick="onSubmissionWithSourceClick();">提出</a>
+                <p>
+                    <label>正解時には自動的にトップページにリダイレクトされます</label>
+                </p>
+                <a id="on-submit" class="btn btn-primary" onclick="onSubmissionWithSourceClick();">提出</a>
+                <label id="result-code"></label>
             </div>
         </div>
     </div>
@@ -76,7 +80,8 @@
         });
 
         function onSubmissionWithSourceClick() {
-            var submit=$("#onSubmit");
+            $("#result-code").text("検証中：お待ちください");
+            var submit=$("#on-submit");
             submit.prop("disabled", true);
             var source=editor.getValue();
             $.ajax({
@@ -91,10 +96,13 @@
                 submit.prop("disabled", false);
                 if(res.result) {
                     // OK
+                    $("#result-code").text("正解");
+                    location.href='/user_top';
                 }else{
                     var message=res.message;
                     // Error
                     // Error message
+                    $("#result-code").text("不正解: もう一度コードを確認してください");
                 }
             }).fail(function (res) {
                 submit.prop("disabled", false);

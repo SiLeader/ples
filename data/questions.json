@@ -20,7 +20,7 @@
         "stdin": "12345",
         "args": [],
         "result": {
-          "stdout": "123",
+          "stdout": "12345",
           "file": {
             "name": "",
             "content": ""
@@ -31,7 +31,7 @@
         "stdin": "100000",
         "args": [],
         "result": {
-          "stdout": "123",
+          "stdout": "100000",
           "file": {
             "name": "",
             "content": ""

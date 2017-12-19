@@ -96,31 +96,26 @@ def check(uid: str, pw: str) -> bool:
     return user[_PASSWORD] == pw
 
 
-def update_result(uid: str, qid: str, results: [bool]):
+def update_result(uid: str, qid: str, results: bool):
     user = _col.find_one({_USER_ID: uid})
     res = user[_QUESTION_RESULTS]
 
-    if qid in res:
-        qres = res[qid]
-        for i in range(len(results)):
-            qres[i]['total'] += 1
-            if results[i]:
-                qres[i]['correct'] += 1
-    else:
-        qres = []
-        for i in range(len(results)):
-            q = {'total': 1, 'correct': 1}
-            if not results[i]:
-                q['correct'] = 0
-            qres.append(q)
-    res[qid] = qres
+    res[qid] = results
     _col.update({_USER_ID: uid}, {'$set': {_QUESTION_RESULTS: res}})
 
 
 def get_result(uid: str, qid: str):
     user = _col.find_one({_USER_ID: uid})
     res = user[_QUESTION_RESULTS]
-    return res[qid]
+    return qid in res and res[qid]
+
+
+def remove_cleared(uid: str, question: [dict]):
+    res = []
+    for q in question:
+        if not get_result(uid, q["id"]):
+            res.append(q)
+    return res
 
 
 if __name__ == '__main__':

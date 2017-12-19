@@ -3,9 +3,8 @@
 
 import pymongo
 import json
-from . import execute
 import uuid
-
+from model import execute
 
 _client = pymongo.MongoClient('localhost')
 _db = _client.ples
@@ -71,7 +70,10 @@ def check_to_create_temporary_file(qid: str, data: [str]) -> bool:
     output = "/tmp/" + uuid.uuid4().hex
     for test in q[_TEST_DATA]:
         result = execute.run_to_create_temporary_file(cid, data, output, test["args"], test["stdin"])
+        stdout = result.stdout.decode('utf-8')
         if result is None or result.returncode != 0:
+            return False
+        if stdout != test["result"]["stdout"]:
             return False
     return True
 

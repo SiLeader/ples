@@ -2,14 +2,14 @@
   {
     "id": "c",
     "command": [
-      "clang -std=c11 -o $@ $^",
+      "clang -xc -std=c11 -o $@ $^",
       "$@ $#"
     ]
   },
   {
     "id": "cpp",
     "command": [
-      "clang++ -std=c11 -o $@ $^",
+      "clang++ -xc++ -std=c11 -o $@ $^",
       "$@ $#"
     ]
   }
